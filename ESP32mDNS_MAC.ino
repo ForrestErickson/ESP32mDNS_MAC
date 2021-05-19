@@ -7,10 +7,25 @@
    Reads the ESP32 chip ID and puts it into the form of a MAC address.
    Composes a unique mDNS domain name composed of the PRODUCT_NAME and the MAC
    Reports unique mDNS domain name on serial port
+   Serves a web page with the mDNS and suggests making a QT code of same.
    Winks LED
+
+   NOTE: the mDNS tested by me to work on Windows 10, and iPhone and 
+   acording to the intertubes works on MAC and Linux. 
+   However it did not work on Androide Galaxy 7 which is expected 
+   acourding to the intertubes.
+
+   IMPORTANT: Set your own router credential below
 
 */
 
+//Router credentials
+  //const char* ssid = "............";
+  //const char* password = "..............";
+  const char* ssid     = "NETGEAR_11N";     // Netgear WAC104 SN: 4SL373BC00087
+  const char* password = "Heavybox201";  // Lab wifi router
+  //const char* password = "Heavybox202";  // bad pw.
+  
 const int BAUDRATE = 115200;            //Use a fast baud.
 
 //For reading MAC
@@ -53,12 +68,6 @@ void setup() {
   Serial.println(PROGRAM_VERSION);
   Serial.println(PROGRAM_SLOGAN);
   Serial.println(PRODUCT_NAME);
-
-  //const char* ssid = "............";
-  //const char* password = "..............";
-  const char* ssid     = "NETGEAR_11N";     // Netgear WAC104 SN: 4SL373BC00087
-  const char* password = "Heavybox201";  // Lab wifi router
-  //const char* password = "Heavybox202";  // bad pw.
 
   // Connect to WiFi network
   WiFi.begin(ssid, password);
@@ -140,7 +149,10 @@ void loop() {
             client.println("<h2>Program: ESP32mDNS_MAC</h2>");
             client.println("My mDNS address: <strong>http://" + String(myMDNSid.c_str()) + ".local</strong>");
             client.print("<br><br>Make QR codes of this mDNS at:");
-            client.print("<ul><li>https://www.qrcode-monkey.com/ </li><li> https://www.qr-code-generator.com/</li></ul>");
+            client.print("<ul>");
+            client.print("<li><a href=\"https://www.qrcode-monkey.com/\"> https://www.qrcode-monkey.com/</a></li>");
+            client.print("<li><a href=\"https://www.qr-code-generator.com/\"> https://www.qr-code-generator.com/</a></li>");
+            client.print("</ul>");
             
             
             client.print("<hr><h6>" + String(PROGRAM_SLOGAN) + "<br>");
