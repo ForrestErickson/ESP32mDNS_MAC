@@ -19,6 +19,14 @@ ESP32mDNS_MAC
 
    IMPORTANT: Set your own router credential
    
-Screen shot of served web page  
+The first time you program and use your device, look for the **IP address** address and the **mDNS** on the serial port.
+![Screen shot of serial port at boot.](SerialPort_IP_mDNS.gif)  
+
+Type in the mDNS address on a browser. (Screen shot of served web page)  
 ![Screen shot of served web page](ServedWebPage.gif)
 
+Make a QR code. (Screen shot of a QR generator web page)  
+![Screen shot of a QR generator web page](QRgenerator.gif)
+
+Print out this QR code and keep it with your device.
+You can now browse fast your device with your iPhone.
