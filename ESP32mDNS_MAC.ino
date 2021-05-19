@@ -17,6 +17,7 @@ const int BAUDRATE = 115200;            //Use a fast baud.
 #include <esp_system.h>
 uint8_t chipid[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 char myMACString[18];
+String myMDNSid;
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
@@ -83,7 +84,7 @@ void setup() {
   esp_efuse_read_mac(chipid);
   snprintf(myMACString, sizeof(myMACString), "%02X%02X%02X%02X%02X%02X", chipid[0], chipid[1], chipid[2], chipid[3], chipid[4], chipid[5]);
   //  Serial.println("-myMACString is: " + String(myMACString));
-  String myMDNSid = PRODUCT_NAME + String(myMACString);
+  myMDNSid = PRODUCT_NAME + String(myMACString);
   if (!MDNS.begin(myMDNSid.c_str())) {
     Serial.println("Error setting up MDNS responder!");
     while (1) {
@@ -133,13 +134,17 @@ void loop() {
             // and a content-type so the client knows what's coming, then a blank line:
             client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
-            client.println("Program: ESP32mDNS_MAC");            
             client.println();
 
             // the content of the HTTP response follows the header:
-            client.print("Click <a href=\"/H\">here</a> to turn the LED on pin 5 on.<br>");
-            client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 5 off.<br>");
-
+            client.println("<h2>Program: ESP32mDNS_MAC</h2>");
+            client.println("My mDNS address: <strong>http://" + String(myMDNSid.c_str()) + ".local</strong>");
+            client.print("<br><br>Make QR codes of this mDNS at:");
+            client.print("<ul><li>https://www.qrcode-monkey.com/ </li><li> https://www.qr-code-generator.com/</li></ul>");
+            
+            
+            client.print("<hr><h6>" + String(PROGRAM_SLOGAN) + "<br>");
+            client.print("Amused Scientist not affiliated or compenseated by QT generators.</h6>");
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
@@ -149,14 +154,6 @@ void loop() {
           }
         } else if (c != '\r') {  // if you got anything else but a carriage return character,
           currentLine += c;      // add it to the end of the currentLine
-        }
-
-        // Check to see if the client request was "GET /H" or "GET /L":
-        if (currentLine.endsWith("GET /H")) {
-          digitalWrite(5, HIGH);               // GET /H turns the LED on
-        }
-        if (currentLine.endsWith("GET /L")) {
-          digitalWrite(5, LOW);                // GET /L turns the LED off
         }
       }
     }
